@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">校园监控</string>
+    <string name="welcome_middle_text">大数据教育</string>
+    <string name="welcome_bottom_text">-全方位教育</string>
+
+    <string-array name="draw">
+        <item>@drawable/main_monitor_selector</item>
+        <item>@drawable/main_playback_selector</item>
+        <item>@drawable/main_me_selector</item>
+    </string-array>
+
+    <string-array name="titles">
+        <item>校园监控</item>
+        <item>录像回放</item>
+        <item>我的</item>
+    </string-array>
+
+    <string name="schoolmonitor">校园监控</string>
+    <string name="playback">录像回放</string>
+    <string name="me">我的</string>
+    <string name="playback_area">录像区域:</string>
+</resources>

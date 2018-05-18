@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/baseMonitorToolBarLayout"
+    android:layout_width="match_parent"
+    android:layout_height="?android:actionBarSize">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:gravity="center"
+            android:maxLength="15"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/playBackLL"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="13dp"
+            android:layout_toRightOf="@+id/titleText"
+            android:gravity="center_vertical|right">
+
+            <com.lancoo.lgschoolmonitor.view.AutoBgImageView
+                android:id="@+id/downloadIcon"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@mipmap/playback_download_icon" />
+
+            <com.lancoo.lgschoolmonitor.view.AutoBgImageView
+                android:id="@+id/searchIcon"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@mipmap/playback_search_icon" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

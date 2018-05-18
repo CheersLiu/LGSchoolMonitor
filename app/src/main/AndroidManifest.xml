@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.lancoo.lgschoolmonitor">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <application
+        android:name=".base.LGSchoolMonitorApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppCompatTheme">
+        <activity
+            android:name="com.lancoo.lgschoolmonitor.base.WelcomeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginModuleTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 认证模块配置 -->
+        <!-- 登录的主界面 -->
+        <activity
+            android:name="com.lancoo.cpbase.authentication.activities.LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginModuleTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <!-- 令牌失效时的弹出的登录界面 -->
+        <activity
+            android:name="com.lancoo.cpbase.authentication.activities.LoginDialogActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginModuleTheme.FullScreen"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <!-- 找回密码界面 -->
+        <activity
+            android:name="com.lancoo.cpbase.authentication.activities.FindPwdActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginModuleTheme.NoActionBar" />
+        <!-- 第三方登录时未绑定本地账户时的界面 -->
+        <activity
+            android:name="com.lancoo.cpbase.authentication.activities.LoginThirdActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginModuleTheme.NoActionBar" />
+        <!-- QQ登录需要配置的界面 -->
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="behind"
+            android:theme="@style/LoginModuleTheme.NoActionBar" />
+        <!-- QQ登录需要配置的界面 -->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent101295596" /> <!-- tencent+appid -->
+            </intent-filter>
+        </activity>
+        <!-- 微博登录 -->
+        <!-- 新浪微博web授权页面 -->
+
+        <!-- 微信登录 -->
+        <activity
+            android:name="com.lancoo.lgschoolmonitor.wxapi.WXEntryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LoginModuleTheme" />
+
+        <meta-data
+            android:name="loginSucess"
+            android:value="com.lancoo.lgschoolmonitor.base.BaseMonitorActivity" /> <!-- 登录成功后要跳转的到的主界面 -->
+        <meta-data
+            android:name="authenFlag"
+            android:value="yunpingtai" />
+        <meta-data
+            android:name="sysType"
+            android:value="sysType101" /> <!-- sysType+系统的类型 -->
+        <meta-data
+            android:name="MainPageTitle"
+            android:value="教育云平台" /> <!-- 配置登录界面的标题 -->
+        <!-- 即便你不需要第三方登录功能也需要配置下面的数据，直接复制下面的配置就行.三方登录配置的数据 -->
+        <meta-data
+            android:name="QQ_APPID"
+            android:value="QQ101295596" /> <!-- values是QQ+在腾讯申请的appid -->
+        <meta-data
+            android:name="WEIBO_APPKEY"
+            android:value="WEIBO286943288" /> <!-- value是WEIBO+在腾讯申请的appkey -->
+        <meta-data
+            android:name="WEIBO_REDIRECT_URL"
+            android:value="http://www.lg-et.cn/UserMgr/Login/OpenLoginCallBack.aspx" /> <!-- values是在新浪上填写的授权回调页 -->
+        <meta-data
+            android:name="WEIXIN_APPID"
+            android:value="wx7730ef6a22ff515b" /> <!-- 直接填入微信的appid -->
+        <meta-data
+            android:name="WEIXIN_SECRET"
+            android:value="3c9ed0ea2b0464f8eab67fa9df7757cd" />
+        <meta-data
+            android:name="isShowThirdLogin"
+            android:value="true" />
+
+        <service android:name="com.lancoo.cpbase.authentication.service.TokenService" />
+        <!-- 认证模块配置 -->
+        <!-- 登录包 -->
+        <receiver android:name="com.lancoo.cpbase.authentication.receiver.AuthenBroadCast">
+            <intent-filter>
+                <action android:name="com.lancoo.broadcast.yunpingtai" />
+            </intent-filter>
+        </receiver>
+        <activity android:name=".base.BaseMonitorActivity"></activity>
+        <activity android:name=".playback.activities.PlayBackAreaActivity"></activity>
+    </application>
+
+</manifest>

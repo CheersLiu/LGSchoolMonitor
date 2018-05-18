@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+
+
+    //playback color
+    <color name="diver">#e5e5e5</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="base_color">#2884ec</color>
+    <color name="color_e0e0e0">#e0e0e0</color>
+    <color name="color_3F3F3F">#3F3F3F</color>
+    <color name="color_434343">#434343</color>
+    <color name="color_FFFFFF">#FFFFFF</color>
+    <color name="color_282828">#282828</color>
+    <color name="color_aaFFFFFF">#aaFFFFFF</color>
+    <color name="color_F2F2F2">#F2F2F2</color>
+</resources>

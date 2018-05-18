@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppCompatTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- 建议在BaseActivity中代码声明 -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="toolbarStyle">@style/toolbarStyle</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+    <!--解决使用v7包下的ToolBar左右侧边出现黑色空白的问题-->
+    <style name="toolbarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="contentInsetRight">0dp</item>
+        <item name="contentInsetLeft">0dp</item>
+    </style>
+</resources>
