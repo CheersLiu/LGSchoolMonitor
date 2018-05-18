@@ -60,6 +60,7 @@ public class PlayBackAreaActivity extends BaseActivity implements View.OnClickLi
 
     private void init() {
         initActionBar();
+        
         mCameraList = new ArrayList<>();
         dts = new ArrayList<>();
         Intent intent = getIntent();
