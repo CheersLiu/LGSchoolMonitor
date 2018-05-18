@@ -43,7 +43,8 @@ public class InitLoader extends ObjectLoader {
 
     public interface ISlideServer {
         /**
-         * @params :
+         * @params :sysID 教室外传"E00" 教室内传"M10"
+         * @params :SubjectID 直接传空字符串
          */
         @GET("/Base/WS/Service_Basic.asmx/WS_G_GetSubSystemServerInfo")
         Observable<SysConfigInfoXmlBean> getSysConfigInfo(@Query("sysID") String sysID,

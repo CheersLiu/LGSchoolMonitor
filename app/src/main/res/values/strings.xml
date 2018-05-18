@@ -19,4 +19,5 @@
     <string name="playback">录像回放</string>
     <string name="me">我的</string>
     <string name="playback_area">录像区域:</string>
+    <string name="playback_search_hint">请输入搜索内容</string>
 </resources>
