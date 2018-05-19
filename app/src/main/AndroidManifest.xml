@@ -138,6 +138,7 @@
         </receiver>
         <activity android:name=".base.BaseMonitorActivity"></activity>
         <activity android:name=".playback.activities.PlayBackAreaActivity"></activity>
+        <activity android:name=".playback.activities.PlayBackSearchActivity"></activity>
     </application>
 
 </manifest>

@@ -59,13 +59,13 @@ public class PlayBackAreaActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void init() {
-        initActionBar();
-        mCameraList = new ArrayList<>();
-        dts = new ArrayList<>();
         Intent intent = getIntent();
         mAreaName = intent.getStringExtra("AreaName");
         mAreaID = intent.getStringExtra("AreaID");
         mAreaType = intent.getStringExtra("AreaType");
+        initActionBar();
+        mCameraList = new ArrayList<>();
+        dts = new ArrayList<>();
         dbUtils = DbUtils.create(this, Constant.DB_NAME
                 + CurrentUser.UserID + ".db");
         mAdapter = new PlayBackAreaAdapter(this, mCameraList);
@@ -166,7 +166,9 @@ public class PlayBackAreaActivity extends BaseActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.searchIcon:
-                toast("搜索功能还没搞！");
+                Intent intent = new Intent();
+                intent.setClass(this, PlayBackSearchActivity.class);
+                startActivity(intent);
                 break;
             default:
 

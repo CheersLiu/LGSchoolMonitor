@@ -39,7 +39,6 @@ import retrofit2.Retrofit;
  * @author Hinata-Liu
  * @date 2018/3/5 19:04.
  */
-
 public class PlayBackFragment extends BaseFragment {
 
     private BaseMonitorActivity activity;

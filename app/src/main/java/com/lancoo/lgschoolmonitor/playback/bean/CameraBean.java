@@ -1,5 +1,8 @@
 package com.lancoo.lgschoolmonitor.playback.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.lidroid.xutils.db.annotation.Column;
 import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Table;
@@ -11,7 +14,8 @@ import com.lidroid.xutils.db.annotation.Table;
  * @date 2018/5/16 18:43.
  */
 @Table
-public class CameraBean {
+public class CameraBean implements Parcelable {
+
     @Id
     private int id;
     @Column
@@ -52,6 +56,9 @@ public class CameraBean {
     private String position;
     @Column
     private String buildType;
+
+    public CameraBean() {
+    }
 
     public int getId() {
         return id;
@@ -211,6 +218,72 @@ public class CameraBean {
 
     public void setBuildType(String buildType) {
         this.buildType = buildType;
+    }
+
+
+    public static final Parcelable.Creator<CameraBean> CREATOR = new Creator<CameraBean>() {
+
+        @Override
+        public CameraBean[] newArray(int size) {
+            return new CameraBean[size];
+        }
+
+        @Override
+        public CameraBean createFromParcel(Parcel source) {
+            return new CameraBean(source);
+        }
+    };
+
+    public CameraBean(Parcel source) {
+        id = source.readInt();
+        buildingId = source.readString();
+        buildingName = source.readString();
+        roomId = source.readString();
+        roomName = source.readString();
+        camId = source.readString();
+        camName = source.readString();
+        camType = source.readString();
+        camInfo = source.readString();
+        resolutionWidth = source.readString();
+        resolutionHeight = source.readString();
+        errorFlag = source.readString();
+        recordServerIp = source.readString();
+        camIP = source.readString();
+        camPort = source.readString();
+        accessAccount = source.readString();
+        accessPwd = source.readString();
+        brand = source.readString();
+        position = source.readString();
+        buildType = source.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(buildingId);
+        dest.writeString(buildingName);
+        dest.writeString(roomId);
+        dest.writeString(roomName);
+        dest.writeString(camId);
+        dest.writeString(camName);
+        dest.writeString(camType);
+        dest.writeString(camInfo);
+        dest.writeString(resolutionWidth);
+        dest.writeString(resolutionHeight);
+        dest.writeString(errorFlag);
+        dest.writeString(recordServerIp);
+        dest.writeString(camIP);
+        dest.writeString(camPort);
+        dest.writeString(accessAccount);
+        dest.writeString(accessPwd);
+        dest.writeString(brand);
+        dest.writeString(position);
+        dest.writeString(buildType);
     }
 
     @Override

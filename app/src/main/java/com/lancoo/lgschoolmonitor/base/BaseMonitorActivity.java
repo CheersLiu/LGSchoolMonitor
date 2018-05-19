@@ -1,6 +1,7 @@
 package com.lancoo.lgschoolmonitor.base;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import com.lancoo.cpbase.authentication.base.TokenManager;
 import com.lancoo.lgschoolmonitor.R;
 import com.lancoo.lgschoolmonitor.bean.SysConfigInfoXmlBean;
 import com.lancoo.lgschoolmonitor.me.fragments.MeFragment;
+import com.lancoo.lgschoolmonitor.playback.activities.PlayBackSearchActivity;
 import com.lancoo.lgschoolmonitor.playback.api.InitLoader;
 import com.lancoo.lgschoolmonitor.playback.fragments.PlayBackFragment;
 import com.lancoo.lgschoolmonitor.schoolmonitor.fragments.MonitorFragment;
@@ -145,7 +147,9 @@ public class BaseMonitorActivity extends BaseActivity implements View.OnClickLis
         int id = view.getId();
         switch (id) {
             case R.id.searchIcon:
-                toast("搜索功能还没搞！");
+                Intent intent = new Intent();
+                intent.setClass(this, PlayBackSearchActivity.class);
+                startActivity(intent);
                 break;
             case R.id.downloadIcon:
                 toast("下载功能还没搞！");
