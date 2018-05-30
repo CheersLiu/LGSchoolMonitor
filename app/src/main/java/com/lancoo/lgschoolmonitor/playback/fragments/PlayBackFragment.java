@@ -9,6 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.lancoo.cpbase.authentication.base.CurrentUser;
 import com.lancoo.lgschoolmonitor.R;
@@ -39,10 +42,14 @@ import retrofit2.Retrofit;
  * @author Hinata-Liu
  * @date 2018/3/5 19:04.
  */
-public class PlayBackFragment extends BaseFragment {
+public class PlayBackFragment extends BaseFragment implements View.OnClickListener{
 
     private BaseMonitorActivity activity;
     RecyclerView mRecListView;
+    RelativeLayout mNodataLayout;
+    ImageView mNodataImg;
+    TextView mNodataText;
+    TextView mFreashBtn;
     private PlayBackListAdapter mAdapter;
     private ArrayList<BuildingCameraBean> mBuildData;
     private ArrayList<CameraBean> mCamData;
@@ -62,18 +69,29 @@ public class PlayBackFragment extends BaseFragment {
         return view;
     }
 
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        init(view);
+        findView(view);
+        init();
     }
 
-    private void init(View view) {
+    private void findView(View view) {
         mRecListView = view.findViewById(R.id.playbackRecView);
+        mNodataLayout = view.findViewById(R.id.nodataLayout);
+        mNodataImg = view.findViewById(R.id.nodataImg);
+        mNodataText = view.findViewById(R.id.nodataText);
+        mFreashBtn = view.findViewById(R.id.freashBtn);
+        mFreashBtn.setOnClickListener(this);
+    }
+
+    private void init() {
         mBuildData = new ArrayList<>();
         mCamData = new ArrayList<>();
         dbUtils = DbUtils.create(activity, Constant.DB_NAME
                 + CurrentUser.UserID + ".db");
+        mNodataLayout.setVisibility(View.GONE);
         mAdapter = new PlayBackListAdapter(activity, mBuildData);
         GridLayoutManager gridManager = new GridLayoutManager(activity, 2);
         mRecListView.setLayoutManager(gridManager);
@@ -111,7 +129,7 @@ public class PlayBackFragment extends BaseFragment {
                 mBuildData.clear();
                 mBuildData.addAll(buildDbList);
                 mAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 //未取到数据，缓存中没有，访问网络获取
                 netGetClassRoomCameraData();
             }
@@ -121,6 +139,23 @@ public class PlayBackFragment extends BaseFragment {
             netGetClassRoomCameraData();
         }
     }
+
+    private void showNodataLayout() {
+        mBuildData.clear();
+        mAdapter.notifyDataSetChanged();
+        mNodataLayout.setVisibility(View.VISIBLE);
+        mNodataImg.setImageResource(R.mipmap.nodata_image);
+        mNodataText.setText("暂无区域信息！");
+    }
+
+    private void showNoNetLayout() {
+        mBuildData.clear();
+        mAdapter.notifyDataSetChanged();
+        mNodataLayout.setVisibility(View.VISIBLE);
+        mNodataImg.setImageResource(R.mipmap.neterror_image);
+        mNodataText.setText("网络访问错误");
+    }
+
 
     /**
      * toast提示
@@ -154,7 +189,7 @@ public class PlayBackFragment extends BaseFragment {
             @Override
             public void accept(Throwable throwable) throws Exception {
                 dismissProcessDialog();
-                toast("访问网络出错了，请重新登录后再次尝试！");
+                showNoNetLayout();
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -178,7 +213,7 @@ public class PlayBackFragment extends BaseFragment {
             @Override
             public void accept(Throwable throwable) throws Exception {
                 dismissProcessDialog();
-                toast("访问网络出错了，请重新登录后再次尝试！");
+                showNoNetLayout();
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -214,7 +249,12 @@ public class PlayBackFragment extends BaseFragment {
                 }
             }
         }
-        mAdapter.notifyDataSetChanged();
+        if (mBuildData.size() > 0) {
+            mNodataLayout.setVisibility(View.GONE);
+            mAdapter.notifyDataSetChanged();
+        } else {
+            showNodataLayout();
+        }
         try {
             ArrayList<CameraBean> dbCameraList = (ArrayList<CameraBean>) dbUtils.findAll(CameraBean
                     .class);
@@ -299,4 +339,16 @@ public class PlayBackFragment extends BaseFragment {
         netGetOuterBuildCameraData();
     }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch(id){
+            case R.id.freashBtn:
+                getDbBuildData();
+            break;
+            default:
+
+            break;
+        }
+    }
 }

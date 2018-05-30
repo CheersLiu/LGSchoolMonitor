@@ -8,6 +8,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lancoo.cpbase.authentication.base.CurrentUser;
@@ -37,6 +39,14 @@ public class VieoDownloadActivity extends BaseActivity implements View.OnClickLi
 
     @BindView(R.id.videoDownloadRecView)
     RecyclerView mDownloadRecView;
+    @BindView(R.id.nodataLayout)
+    RelativeLayout mNodataLayout;
+    @BindView(R.id.nodataImg)
+    ImageView mNodataImg;
+    @BindView(R.id.nodataText)
+    TextView mNodataText;
+    @BindView(R.id.freashBtn)
+    TextView mFreashBtn;
     private Unbinder mUnbinder;
     private ArrayList<VideoDownloadBean> mDataList;
     private VideoDownloadAdapter mAdapter;
@@ -68,7 +78,20 @@ public class VieoDownloadActivity extends BaseActivity implements View.OnClickLi
         mDownloadRecView.setAdapter(mAdapter);
         mAdapter.setOnItemClickLitener(new OnClickVideoListener());
         mAdapter.setOnItemDeleteLitener(new OnDeleteDownloadVideoListener());
+        if (mDataList.size() > 0) {
+            mNodataLayout.setVisibility(View.GONE);
+        } else {
+            showNodataLayout();
+        }
+    }
 
+    private void showNodataLayout() {
+        mDataList.clear();
+        mAdapter.notifyDataSetChanged();
+        mNodataLayout.setVisibility(View.VISIBLE);
+        mNodataImg.setImageResource(R.mipmap.nodata_image);
+        mNodataText.setText("暂无下载录像数据！");
+        mFreashBtn.setVisibility(View.INVISIBLE);
     }
 
 
@@ -90,7 +113,11 @@ public class VieoDownloadActivity extends BaseActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.cleanTV:
-                createClearChatlogDialog(R.string.clear_download_list_hint);
+                if (mDataList.size() > 0) {
+                    createClearChatlogDialog(R.string.clear_download_list_hint);
+                }else {
+                    toast("数据都没有，要清空些啥子@~@");
+                }
                 break;
             default:
 
@@ -105,6 +132,7 @@ public class VieoDownloadActivity extends BaseActivity implements View.OnClickLi
             public void onClick(DialogInterface dialogInterface, int i) {
                 mObservable.cleanAllVideoWithLocal(mDataList);
                 mAdapter.notifyDataSetChanged();
+                showNodataLayout();
             }
         });
     }
@@ -124,6 +152,9 @@ public class VieoDownloadActivity extends BaseActivity implements View.OnClickLi
         public void onItemDelete(View view, int position) {
             mObservable.deleteVideoWithLocal(mDataList.get(position));
             mAdapter.notifyItemChanged(position);
+            if (mDataList.size() <= 0) {
+                showNodataLayout();
+            }
         }
     }
 

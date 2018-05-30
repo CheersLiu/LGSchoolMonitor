@@ -11,6 +11,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lancoo.cpbase.authentication.base.CurrentUser;
@@ -39,6 +41,14 @@ public class PlayBackSearchActivity extends BaseActivity implements View.OnClick
 
     @BindView(R.id.searchRecView)
     RecyclerView mRecView;
+    @BindView(R.id.nodataLayout)
+    RelativeLayout mNodataLayout;
+    @BindView(R.id.nodataImg)
+    ImageView mNodataImg;
+    @BindView(R.id.nodataText)
+    TextView mNodataText;
+    @BindView(R.id.freashBtn)
+    TextView mFreashBtn;
     private Unbinder mUnbinder;
     private EditText mEditText;
     private AutoBgImageView mDeleteIcon;
@@ -69,6 +79,8 @@ public class PlayBackSearchActivity extends BaseActivity implements View.OnClick
         mAdapter = new PlayBackSearchAdapter(this, mSearchList);
         mAdapter.setOnItemClickLitener(new OnClickSearchCameraListener());
         mRecView.setAdapter(mAdapter);
+        mNodataLayout.setVisibility(View.GONE);
+        mFreashBtn.setOnClickListener(this);
         getDbCameraData();
     }
 
@@ -115,15 +127,27 @@ public class PlayBackSearchActivity extends BaseActivity implements View.OnClick
             case R.id.deleteIcon:
                 mEditText.setText("");
                 mSearchList.clear();
+                mNodataLayout.setVisibility(View.GONE);
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.searchText:
+                searchCameraByKeyword();
+                break;
+            case R.id.freashBtn:
                 searchCameraByKeyword();
                 break;
             default:
 
                 break;
         }
+    }
+
+    private void showNodataLayout() {
+        mSearchList.clear();
+        mAdapter.notifyDataSetChanged();
+        mNodataLayout.setVisibility(View.VISIBLE);
+        mNodataImg.setImageResource(R.mipmap.nodata_image);
+        mNodataText.setText("没有搜索到任何结果！");
     }
 
     private class OnClickSearchCameraListener implements PlayBackSearchAdapter.OnItemClickLitener {
@@ -167,7 +191,12 @@ public class PlayBackSearchActivity extends BaseActivity implements View.OnClick
             }
         }
         dismissProcessDialog();
-        mAdapter.notifyDataSetChanged();
+        if (mSearchList.size() > 0) {
+            mNodataLayout.setVisibility(View.GONE);
+            mAdapter.notifyDataSetChanged();
+        } else {
+            showNodataLayout();
+        }
     }
 
     /**
@@ -210,6 +239,7 @@ public class PlayBackSearchActivity extends BaseActivity implements View.OnClick
         public void onTextChanged(CharSequence arg0, int arg1, int arg2,
                                   int arg3) {
             if (TextUtils.isEmpty(arg0.toString())) {
+                mNodataLayout.setVisibility(View.GONE);
                 mDeleteIcon.setVisibility(View.INVISIBLE);
             } else {
                 mDeleteIcon.setVisibility(View.VISIBLE);
