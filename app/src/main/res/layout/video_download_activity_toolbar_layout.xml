@@ -32,14 +32,16 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
 
-        <com.lancoo.lgschoolmonitor.view.AutoBgImageView
-            android:id="@+id/searchIcon"
-            android:layout_width="30dp"
+        <TextView
+            android:id="@+id/cleanTV"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="13dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:scaleType="centerInside"
-            android:src="@mipmap/playback_search_icon" />
+            android:textSize="12sp"
+            android:gravity="center_vertical"
+            android:text="清空"
+            android:textColor="@color/white"/>
     </RelativeLayout>
 </RelativeLayout>

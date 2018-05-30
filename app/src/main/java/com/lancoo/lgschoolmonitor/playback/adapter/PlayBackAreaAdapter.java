@@ -48,11 +48,13 @@ public class PlayBackAreaAdapter extends RecyclerView.Adapter<PlayBackAreaAdapte
     @Override
     public void onBindViewHolder(final PlayBackAreaAdapterViewHolder holder, int position) {
         CameraBean bean = mData.get(position);
+        String outerCamName = bean.getPosition() + bean.getCamName
+                ();
+        String insideCamName = bean.getCamName();
         if ("OUTER".equals(bean.getBuildType())) {
-            holder.mCamName.setText(bean.getPosition() + bean.getCamName
-                    ());
+            holder.mCamName.setText(outerCamName);
         } else {
-            holder.mCamName.setText(bean.getCamName());
+            holder.mCamName.setText(insideCamName);
         }
         if (mOnItemClickLitener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {

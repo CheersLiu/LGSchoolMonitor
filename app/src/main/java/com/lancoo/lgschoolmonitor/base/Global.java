@@ -11,4 +11,6 @@ public class Global {
     public static String mInsideBaseUrl = "";
     //获取教室外数据基础地址
     public static String mOuterBaseUrl = "";
+    //获取录像信息列表基础地址
+    public static String mVideoBaseUrl = "";
 }

@@ -1,5 +1,11 @@
 package com.lancoo.lgschoolmonitor.base;
 
+import android.os.Environment;
+
+import com.lancoo.cpbase.authentication.base.CurrentUser;
+
+import java.io.File;
+
 /**
  * @author Hinata-Liu
  * @date 2018/3/6 9:15.
@@ -18,7 +24,7 @@ public class Constant {
     /**
      * 环境 1 单个专业英语院校 2 单个普通大学 3 单个中小学 4 多学校(县区范围) 5 中职学校 6 高职学校
      */
-    public static int EnvironmentType=-1;
+    public static int EnvironmentType = -1;
     /**
      * 访问模式，游客模式
      */
@@ -38,4 +44,14 @@ public class Constant {
     public final static String WS_NAME_SPACE = "http://www.chinalancoo.com/";
     // 获取教室内摄像头信息方法名
     public final static String WS_GET_ROOM_CAM_INFO_METHOD_NAME = "WS_IDMC_Room_Get_WithCameras";
+
+    // 根目录
+    public static final String ROOT = Environment.getExternalStorageDirectory()
+            + File.separator + "lgschoolmonitor" + File.separator;
+    // 附件下载路径
+    public static final String DOWNLOAD_PATH = ROOT + "download"
+            + File.separator;
+    public static final String VIDEO_PATH = DOWNLOAD_PATH + "video"
+            + File.separator + CurrentUser.UserID + File.separator;
+
 }

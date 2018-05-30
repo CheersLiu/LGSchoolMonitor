@@ -40,6 +40,10 @@ public class InitLoader extends ObjectLoader {
         return observe(iSlideServer.getOuterBuildCameraBean());
     }
 
+    // 获取摄像头录像列表数据
+    public Observable<String> getCameraVideoString(String params){
+        return observe(iSlideServer.getCameraVideoString("GetMonitorResOneDay",params));
+    }
 
     public interface ISlideServer {
         /**
@@ -66,6 +70,15 @@ public class InitLoader extends ObjectLoader {
          */
         @GET("api/camera/getallcameras")
         Observable<List<OuterBuildCameraBean>> getOuterBuildCameraBean();
+
+        /**
+         * 获取摄像头录像数据
+         *
+         * @return
+         */
+        @GET("IClassroom/WebApi/External.ashx")
+        Observable<String> getCameraVideoString(@Query("method") String method,@Query("params") String params);
+
 
     }
 

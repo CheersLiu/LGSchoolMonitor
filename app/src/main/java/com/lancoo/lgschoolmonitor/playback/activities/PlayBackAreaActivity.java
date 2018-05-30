@@ -84,7 +84,10 @@ public class PlayBackAreaActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onItemClick(View view, int position) {
-                toast(mCameraList.get(position).getCamName());
+                Intent intent = new Intent();
+                intent.setClass(PlayBackAreaActivity.this, CameraVideoListActivity.class);
+                intent.putExtra("CameraBean", mCameraList.get(position));
+                startActivity(intent);
             }
         });
 
@@ -116,8 +119,7 @@ public class PlayBackAreaActivity extends BaseActivity implements View.OnClickLi
                     .where("buildingId", "=",
                             mAreaID).and("buildingName", "=", mAreaName).and("buildType", "=",
                             mAreaType));
-            list = list.subList(0, 6);
-            if (null != list && list.size() > 0) {
+            if (list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
                     ArrayList<CameraBean> camList = new ArrayList<>();
                     CameraBean cameraBean = list.get(i);

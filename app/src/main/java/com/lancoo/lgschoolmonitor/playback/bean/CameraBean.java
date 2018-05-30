@@ -17,45 +17,45 @@ import com.lidroid.xutils.db.annotation.Table;
 public class CameraBean implements Parcelable {
 
     @Id
-    private int id;
+    private int id; //数据库表中索引，自增字段
     @Column
-    private String buildingId;
+    private String buildingId; ///区域ID，对应教室外的AreaID
     @Column
-    private String buildingName;
+    private String buildingName; ///区域名称，对应教室外数据的AreaName
     @Column
-    private String roomId;
+    private String roomId;//教室ID，教室外摄像头无此属性
     @Column
-    private String roomName;
+    private String roomName;//教室内教室名称，教室外摄像头无此属性
     @Column
-    private String camId;
+    private String camId;//教室内摄像头ID，对应教室外的CameraID
     @Column
-    private String camName;
+    private String camName;//教室内摄像头名称，对应教室外的CameraName
     @Column
-    private String camType;
+    private String camType;//教室内摄像头类型，教室外摄像头无此属性
     @Column
-    private String camInfo;
+    private String camInfo;//教室内摄像头详情，教室外摄像头无此属性
     @Column
-    private String resolutionWidth;
+    private String resolutionWidth;//教室内摄像头像素，教室外摄像头无此属性
     @Column
-    private String resolutionHeight;
+    private String resolutionHeight;//教室内摄像头像素，教室外摄像头无此属性
     @Column
-    private String errorFlag;
+    private String errorFlag;//摄像头是否损坏，教室外摄像头无此属性
     @Column
-    private String recordServerIp;
+    private String recordServerIp;//教室内录播服务器地址等数据，对应教室外的RecordServerID
     @Column
-    private String camIP;
+    private String camIP;//教室外摄像头IP，教室内摄像头无此属性
     @Column
-    private String camPort;
+    private String camPort;//教室外摄像头端口，教室内摄像头无此属性
     @Column
-    private String accessAccount;
+    private String accessAccount;//教室外摄像头用户名称，教室内摄像头无此属性
     @Column
-    private String accessPwd;
+    private String accessPwd;//教室外摄像头密码，教室内摄像头无此属性
     @Column
-    private String brand;
+    private String brand;//教室外摄像头品牌，教室内摄像头无此属性
     @Column
-    private String position;
+    private String position;//教室外摄像头位置信息，教室内摄像头无此属性
     @Column
-    private String buildType;
+    private String buildType;//INSIDE：表示教室内，OUTER表示教室外
 
     public CameraBean() {
     }
