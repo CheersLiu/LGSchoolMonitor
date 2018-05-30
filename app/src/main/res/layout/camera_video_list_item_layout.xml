@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="194dp">
+
+    <LinearLayout
+        android:id="@+id/headLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/circleBg"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginLeft="22dp"
+            android:background="@drawable/play_back_circle_bg_shape" />
+
+        <TextView
+            android:id="@+id/durationTimeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/login_operate_margin_left10dp"
+            android:textColor="@color/color_282828"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/placeHolder"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="25dp"
+        android:background="@color/color_9BBFD2" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/headLayout"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="@dimen/login_operate_margin_left10dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="@dimen/login_operate_margin_left10dp"
+        android:layout_toRightOf="@+id/placeHolder">
+
+        <ImageView
+            android:id="@+id/videoSnapshotIV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/camera_list_video_snapshot_bg_shape" />
+
+        <com.lancoo.lgschoolmonitor.view.AutoBgImageView
+            android:id="@+id/playBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"
+            android:src="@mipmap/camera_list_play_btn_icon" />
+    </FrameLayout>
+</RelativeLayout>

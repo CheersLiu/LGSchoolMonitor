@@ -1,15 +1,16 @@
 package com.lancoo.lgschoolmonitor.playback.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lancoo.lgschoolmonitor.R;
+import com.lancoo.lgschoolmonitor.playback.activities.CameraVideoListActivity;
 import com.lancoo.lgschoolmonitor.playback.bean.CameraBean;
 import com.lancoo.lgschoolmonitor.playback.bean.DataTree;
 
@@ -88,9 +89,10 @@ public class RoomCameraListAdapter extends SecondaryListAdapter<RoomCameraListAd
     @Override
     public void onSubItemClick(SubItemViewHolder holder, int groupItemIndex, int subItemIndex) {
 
-        Toast.makeText(context, "sub item " + String.valueOf(subItemIndex) + " in group item " +
-                String.valueOf(groupItemIndex), Toast.LENGTH_SHORT).show();
-
+        Intent intent = new Intent();
+        intent.setClass(context, CameraVideoListActivity.class);
+        intent.putExtra("CameraBean", dts.get(groupItemIndex).getSubItems().get(subItemIndex));
+        context.startActivity(intent);
     }
 
     public static class GroupItemViewHolder extends RecyclerView.ViewHolder {

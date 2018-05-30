@@ -19,6 +19,7 @@ android {
     repositories {
         flatDir {
             dirs 'libs'
+            maven { url "https://jitpack.io" }
         }
     }
 }
@@ -63,6 +64,7 @@ dependencies {
     //添加最新版OkHttp
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+    compile 'com.github.mcxtzhang:SwipeDelMenuLayout:V1.2.3'
 
     //引入Retrofit的XML的转换器
     compile('com.squareup.retrofit2:converter-simplexml:2.3.0') {

@@ -22,13 +22,21 @@ import com.lancoo.lgschoolmonitor.R;
 import com.lancoo.lgschoolmonitor.bean.SysConfigInfoXmlBean;
 import com.lancoo.lgschoolmonitor.me.fragments.MeFragment;
 import com.lancoo.lgschoolmonitor.playback.activities.PlayBackSearchActivity;
+import com.lancoo.lgschoolmonitor.playback.activities.VieoDownloadActivity;
 import com.lancoo.lgschoolmonitor.playback.api.InitLoader;
+import com.lancoo.lgschoolmonitor.playback.bean.BuildingCameraBean;
+import com.lancoo.lgschoolmonitor.playback.bean.CameraBean;
+import com.lancoo.lgschoolmonitor.playback.bean.ClassroomCameraXMLBean;
+import com.lancoo.lgschoolmonitor.playback.bean.OuterBuildCameraBean;
 import com.lancoo.lgschoolmonitor.playback.fragments.PlayBackFragment;
 import com.lancoo.lgschoolmonitor.schoolmonitor.fragments.MonitorFragment;
 import com.lancoo.lgschoolmonitor.utils.RetrofitServiceManager;
 import com.lancoo.lgschoolmonitor.view.AutoBgImageView;
 import com.lancoo.lgschoolmonitor.view.TabView;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.exception.DbException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
@@ -54,6 +62,9 @@ public class BaseMonitorActivity extends BaseActivity implements View.OnClickLis
     private LinearLayout playBackLL;//录像回放按钮布局
     private AutoBgImageView downloadIcon;//录像回放下载按钮；
     private AutoBgImageView searchIcon;//录像回放搜索按钮；
+    private ArrayList<BuildingCameraBean> mBuildData;
+    private ArrayList<CameraBean> mCamData;
+    private DbUtils dbUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +83,10 @@ public class BaseMonitorActivity extends BaseActivity implements View.OnClickLis
 
     private void init() {
         initActionBar();
+        mBuildData = new ArrayList<>();
+        mCamData = new ArrayList<>();
+        dbUtils = DbUtils.create(this, Constant.DB_NAME
+                + CurrentUser.UserID + ".db");
         monitorFragment = new MonitorFragment();
         mFragment = monitorFragment;
         getSupportFragmentManager().beginTransaction().hide(mFragment)
@@ -106,8 +121,9 @@ public class BaseMonitorActivity extends BaseActivity implements View.OnClickLis
         mOperate = new LoginOperate(this);
         TokenManager.getInstance().addTokenListener(tokenListener);
         TokenManager.getInstance().setInfoListener(infoListener);
-        getInsideUrl();
         getOuterUrl();
+        getVideoUrl();
+        getInsideUrl();
     }
 
     private void initActionBar() {
@@ -152,7 +168,9 @@ public class BaseMonitorActivity extends BaseActivity implements View.OnClickLis
                 startActivity(intent);
                 break;
             case R.id.downloadIcon:
-                toast("下载功能还没搞！");
+                Intent intent1 = new Intent();
+                intent1.setClass(this, VieoDownloadActivity.class);
+                startActivity(intent1);
                 break;
             default:
 
@@ -312,6 +330,7 @@ public class BaseMonitorActivity extends BaseActivity implements View.OnClickLis
                 List<String> resultstr = sysConfigInfoXmlBean.getConfigInfos();
                 if (resultstr == null || resultstr.size() <= 0) return;
                 Global.mInsideBaseUrl = resultstr.get(resultstr.size() - 1);
+                netGetClassRoomCameraData();
             }
         }, new Consumer<Throwable>() {
             @Override
@@ -354,5 +373,182 @@ public class BaseMonitorActivity extends BaseActivity implements View.OnClickLis
                 throwable.printStackTrace();
             }
         });
+    }
+
+    /**
+     * 获取录像列表的基础地址
+     *
+     * @author Hinata-Liu
+     * @date 2018/5/21 11:23
+     */
+    @SuppressLint("CheckResult")
+    private void getVideoUrl() {
+        Retrofit retrofit = RetrofitServiceManager.getXmlRetrofit(baseAddress);
+        InitLoader initLoader = new InitLoader(retrofit);
+        initLoader.getSysConfigInfo("D00", "").subscribe(new Consumer<SysConfigInfoXmlBean>() {
+            @Override
+            public void accept(SysConfigInfoXmlBean sysConfigInfoXmlBean) throws Exception {
+                List<String> resultstr = sysConfigInfoXmlBean.getConfigInfos();
+                if (resultstr == null || resultstr.size() <= 0) return;
+                Global.mVideoBaseUrl = resultstr.get(resultstr.size() - 1);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                throwable.printStackTrace();
+            }
+        });
+    }
+
+    @SuppressLint("CheckResult")
+    private void netGetClassRoomCameraData() {
+        showProcessDialog(this);
+        Retrofit retrofit = RetrofitServiceManager.getXmlRetrofit(Global.mInsideBaseUrl);
+        InitLoader initLoader = new InitLoader(retrofit);
+        initLoader.getClassroomCameraXMLBean().subscribe(new Consumer<ClassroomCameraXMLBean>() {
+            @Override
+            public void accept(ClassroomCameraXMLBean classroomCameraXMLBean) throws Exception {
+                getCameraParse(classroomCameraXMLBean);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                dismissProcessDialog();
+            }
+        });
+    }
+
+    @SuppressLint("CheckResult")
+    private void netGetOuterBuildCameraData() {
+        Retrofit retrofit = RetrofitServiceManager.getGsonRetrofit(Global.mOuterBaseUrl);
+        InitLoader initLoader = new InitLoader(retrofit);
+        initLoader.getOuterBuildCameraBean().subscribe(new Consumer<List<OuterBuildCameraBean>>() {
+            @Override
+            public void accept(List<OuterBuildCameraBean> outerBuildCameraBeans) throws Exception {
+                if (null != outerBuildCameraBeans && outerBuildCameraBeans.size() > 0) {
+                    getOuterCameraPaese(outerBuildCameraBeans);
+                }
+
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                dismissProcessDialog();
+            }
+        });
+    }
+
+
+    private void getOuterCameraPaese(List<OuterBuildCameraBean> outerBuildCameraBeans) {
+        for (int i = 0; i < outerBuildCameraBeans.size(); i++) {
+            BuildingCameraBean buildingCameraBean = new BuildingCameraBean();
+            buildingCameraBean.setBuildingId(outerBuildCameraBeans.get(i).getAreaID());
+            buildingCameraBean.setBuildingName(outerBuildCameraBeans.get(i).getAreaName());
+            buildingCameraBean.setCamNum(outerBuildCameraBeans.get(i).getCameraList().size());
+            buildingCameraBean.setType("OUTER");
+            mBuildData.add(buildingCameraBean);
+            List<OuterBuildCameraBean.CameraListBean> cameraListBeans = outerBuildCameraBeans.get
+                    (i).getCameraList();
+            if (null != cameraListBeans && cameraListBeans.size() > 0) {
+                for (int j = 0; j < cameraListBeans.size(); j++) {
+                    OuterBuildCameraBean.CameraListBean cameraListBean = cameraListBeans.get(j);
+                    CameraBean cameraBean = new CameraBean();
+                    cameraBean.setBuildingId(buildingCameraBean.getBuildingId());
+                    cameraBean.setBuildingName(buildingCameraBean.getBuildingName());
+                    cameraBean.setCamId(cameraListBean.getCameraID());
+                    cameraBean.setCamName(cameraListBean.getCameraName());
+                    cameraBean.setCamIP(cameraListBean.getCameraIP());
+                    cameraBean.setCamPort(cameraListBean.getCameraPort());
+                    cameraBean.setAccessAccount(cameraListBean.getAccessAccount());
+                    cameraBean.setAccessPwd(cameraListBean.getAccessPwd());
+                    cameraBean.setBrand(cameraListBean.getBrand());
+                    cameraBean.setPosition(cameraListBean.getPosition());
+                    cameraBean.setRecordServerIp(cameraListBean.getRecordServerID());
+                    cameraBean.setBuildType("OUTER");
+                    mCamData.add(cameraBean);
+                }
+            }
+        }
+        try {
+            ArrayList<CameraBean> dbCameraList = (ArrayList<CameraBean>) dbUtils.findAll(CameraBean
+                    .class);
+            ArrayList<BuildingCameraBean> dbBuildList = (ArrayList<BuildingCameraBean>) dbUtils
+                    .findAll(BuildingCameraBean.class);
+            if (null != dbCameraList && dbCameraList.size() > 0) {
+                dbUtils.deleteAll(dbCameraList);
+            }
+            if (null != dbBuildList && dbBuildList.size() > 0) {
+                dbUtils.deleteAll(dbBuildList);
+            }
+            dbUtils.saveOrUpdateAll(mBuildData);
+            dbUtils.saveOrUpdateAll(mCamData);
+        } catch (DbException e) {
+        }
+        dismissProcessDialog();
+    }
+
+    /**
+     * 将网络获取到的对象转化为自定义的CameraBean对象，用来保存数据库表
+     *
+     * @author Hinata-Liu
+     * @date 2018/5/17 12:53
+     */
+    private void getCameraParse(ClassroomCameraXMLBean classroomCameraXMLBean) {
+        List<ClassroomCameraXMLBean.ModelInfoRoomGetWithCameras> buildList =
+                classroomCameraXMLBean.getBuildingList();
+        mBuildData.clear();
+        mCamData.clear();
+        if (null != buildList && buildList.size() > 0) {
+            for (int b = 0; b < buildList.size(); b++) {
+                ClassroomCameraXMLBean.ModelInfoRoomGetWithCameras buildBean = buildList.get(b);
+                BuildingCameraBean buildingCameraBean = new BuildingCameraBean();
+                buildingCameraBean.setBuildingId(buildBean.getBuildingId());
+                buildingCameraBean.setBuildingName(buildBean.getBuildingName());
+                buildingCameraBean.setType("INSIDE");
+                List<ClassroomCameraXMLBean.RoomList> roomList = buildBean.getRoomList();
+                int buildCamNum = 0;
+                if (null == roomList || roomList.size() <= 0) {
+                    buildingCameraBean.setCamNum(buildCamNum);
+                    mBuildData.add(buildingCameraBean);
+                    break;
+                } else {
+                    for (int r = 0; r < roomList.size(); r++) {
+                        List<ClassroomCameraXMLBean.RoomInfo> roomInfoList = roomList.get(r)
+                                .getRoomInfoList();
+                        if (null != roomInfoList && roomInfoList.size() > 0) {
+                            for (int i = 0; i < roomInfoList.size(); i++) {
+                                ClassroomCameraXMLBean.RoomInfo roomInfo = roomInfoList.get(i);
+                                List<ClassroomCameraXMLBean.Model_CameraInfo> cameraInfoList =
+                                        roomInfo.getCameras().getModelCameraInfoList();
+                                for (int c = 0; c < cameraInfoList.size(); c++) {
+                                    buildCamNum++;
+                                    CameraBean cameraBean = new CameraBean();
+                                    ClassroomCameraXMLBean.Model_CameraInfo cameraInfo =
+                                            cameraInfoList.get(c);
+                                    cameraBean.setBuildingId(buildBean.getBuildingId());
+                                    cameraBean.setBuildingName(buildBean.getBuildingName());
+                                    cameraBean.setRoomId(roomInfo.getRoomId());
+                                    cameraBean.setRoomName(roomInfo.getRoomName());
+                                    cameraBean.setRecordServerIp(roomInfo.getRecordServerIp());
+                                    cameraBean.setCamId(cameraInfo.getCamId());
+                                    cameraBean.setCamName(cameraInfo.getCamName());
+                                    cameraBean.setCamType(cameraInfo.getCamType());
+                                    cameraBean.setCamInfo(cameraInfo.getCamInfo());
+                                    cameraBean.setResolutionWidth(cameraInfo.getResolutionWidth());
+                                    cameraBean.setResolutionHeight(cameraInfo.getResolutionHeight
+                                            ());
+                                    cameraBean.setErrorFlag(cameraInfo.getErrorFlag());
+                                    cameraBean.setBuildType("INSIDE");
+                                    buildingCameraBean.setCamNum(buildCamNum);
+                                    mCamData.add(cameraBean);
+                                }
+                            }
+                        }
+                    }
+                }
+                mBuildData.add(buildingCameraBean);
+            }
+        }
+        netGetOuterBuildCameraData();
     }
 }

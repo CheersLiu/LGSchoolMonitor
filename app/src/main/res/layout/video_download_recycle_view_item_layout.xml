@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="88dp"
+    android:clickable="true"
+    app:ios="false"
+    app:leftSwipe="true"
+    app:swipeEnable="true">
+
+    <RelativeLayout
+        android:id="@+id/contentRL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="87dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/login_operate_margin_left10dp">
+
+            <FrameLayout
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/login_operate_margin_left10dp"
+                android:layout_marginTop="@dimen/login_operate_margin_left10dp">
+
+                <ImageView
+                    android:id="@+id/videoSnapshotIV"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY" />
+
+                <RelativeLayout
+                    android:id="@+id/downloadRL"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/color_80000000" />
+
+                    <FrameLayout
+                        android:id="@+id/iconFL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true">
+
+                        <com.lancoo.lgschoolmonitor.view.AutoBgImageView
+                            android:id="@+id/downloadIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="centerInside"
+                            android:src="@mipmap/video_download_icon" />
+
+                        <com.lancoo.lgschoolmonitor.view.AutoBgImageView
+                            android:id="@+id/pauseIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="centerInside"
+                            android:src="@mipmap/video_pause_icon" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/downloadProText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/iconFL"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+                </RelativeLayout>
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/login_operate_margin_left10dp"
+                android:layout_marginRight="@dimen/login_operate_margin_left10dp">
+
+                <TextView
+                    android:id="@+id/buildName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="@dimen/login_operate_margin_left10dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/color_1F1F1F"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/positionName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/durationTimeText"
+                    android:layout_marginBottom="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/color_989898"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/durationTimeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="12dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/color_989898"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="130dp"
+            android:background="@color/color_e0e0e0" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/deleteText"
+        android:layout_width="71dp"
+        android:layout_height="match_parent"
+        android:background="@color/color_CC0000"
+        android:gravity="center"
+        android:text="删除"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>

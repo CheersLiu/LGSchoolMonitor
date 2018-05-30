@@ -139,6 +139,9 @@
         <activity android:name=".base.BaseMonitorActivity"></activity>
         <activity android:name=".playback.activities.PlayBackAreaActivity"></activity>
         <activity android:name=".playback.activities.PlayBackSearchActivity"></activity>
+        <activity android:name=".playback.activities.CameraVideoListActivity"></activity>
+        <activity android:name=".playback.activities.VieoDownloadActivity"></activity>
+        <activity android:name=".playback.activities.PlayVideoActivity"></activity>
     </application>
 
 </manifest>

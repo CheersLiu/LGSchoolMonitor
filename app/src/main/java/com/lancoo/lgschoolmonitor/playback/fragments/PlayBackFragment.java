@@ -91,7 +91,35 @@ public class PlayBackFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
-        netGetClassRoomCameraData();
+        getDbBuildData();
+    }
+
+    /**
+     * 获取数据库中的缓存数据，如果取不到数据则访问网络或取服务端数据
+     *
+     * @author Hinata-Liu
+     * @date 2018/5/22 8:58
+     */
+    private void getDbBuildData() {
+        showProcessDialog(activity);
+        try {
+            ArrayList<BuildingCameraBean> buildDbList = (ArrayList<BuildingCameraBean>) dbUtils
+                    .findAll(BuildingCameraBean.class);
+            if (null != buildDbList && buildDbList.size() > 0) {
+                //正常取到数据
+                dismissProcessDialog();
+                mBuildData.clear();
+                mBuildData.addAll(buildDbList);
+                mAdapter.notifyDataSetChanged();
+            }else{
+                //未取到数据，缓存中没有，访问网络获取
+                netGetClassRoomCameraData();
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+            //未取到数据，数据库操作出现异常，访问网络获取
+            netGetClassRoomCameraData();
+        }
     }
 
     /**
@@ -113,12 +141,8 @@ public class PlayBackFragment extends BaseFragment {
     }
 
 
-
-
-
     @SuppressLint("CheckResult")
     private void netGetClassRoomCameraData() {
-        showProcessDialog(activity);
         Retrofit retrofit = RetrofitServiceManager.getXmlRetrofit(Global.mInsideBaseUrl);
         InitLoader initLoader = new InitLoader(retrofit);
         initLoader.getClassroomCameraXMLBean().subscribe(new Consumer<ClassroomCameraXMLBean>() {
@@ -129,6 +153,9 @@ public class PlayBackFragment extends BaseFragment {
         }, new Consumer<Throwable>() {
             @Override
             public void accept(Throwable throwable) throws Exception {
+                dismissProcessDialog();
+                toast("访问网络出错了，请重新登录后再次尝试！");
+                mAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -137,19 +164,22 @@ public class PlayBackFragment extends BaseFragment {
     private void netGetOuterBuildCameraData() {
         Retrofit retrofit = RetrofitServiceManager.getGsonRetrofit(Global.mOuterBaseUrl);
         InitLoader initLoader = new InitLoader(retrofit);
-        initLoader.getOuterBuildCameraBean().subscribe(new Consumer<List<OuterBuildCameraBean>>() {
+        initLoader.getOuterBuildCameraBean().subscribe(new Consumer<List<OuterBuildCameraBean>>
+                () {
             @Override
-            public void accept(List<OuterBuildCameraBean> outerBuildCameraBeans) throws Exception {
+            public void accept(List<OuterBuildCameraBean> outerBuildCameraBeans) throws
+                    Exception {
                 dismissProcessDialog();
                 if (null != outerBuildCameraBeans && outerBuildCameraBeans.size() > 0) {
                     getOuterCameraPaese(outerBuildCameraBeans);
                 }
-
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(Throwable throwable) throws Exception {
                 dismissProcessDialog();
+                toast("访问网络出错了，请重新登录后再次尝试！");
+                mAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -186,11 +216,17 @@ public class PlayBackFragment extends BaseFragment {
         }
         mAdapter.notifyDataSetChanged();
         try {
-            ArrayList<CameraBean> dbList = (ArrayList<CameraBean>) dbUtils.findAll(CameraBean
+            ArrayList<CameraBean> dbCameraList = (ArrayList<CameraBean>) dbUtils.findAll(CameraBean
                     .class);
-            if (null != dbList && dbList.size() > 0) {
-                dbUtils.deleteAll(dbList);
+            ArrayList<BuildingCameraBean> dbBuildList = (ArrayList<BuildingCameraBean>) dbUtils
+                    .findAll(BuildingCameraBean.class);
+            if (null != dbCameraList && dbCameraList.size() > 0) {
+                dbUtils.deleteAll(dbCameraList);
             }
+            if (null != dbBuildList && dbBuildList.size() > 0) {
+                dbUtils.deleteAll(dbBuildList);
+            }
+            dbUtils.saveOrUpdateAll(mBuildData);
             dbUtils.saveOrUpdateAll(mCamData);
         } catch (DbException e) {
         }
@@ -244,7 +280,8 @@ public class PlayBackFragment extends BaseFragment {
                                     cameraBean.setCamName(cameraInfo.getCamName());
                                     cameraBean.setCamType(cameraInfo.getCamType());
                                     cameraBean.setCamInfo(cameraInfo.getCamInfo());
-                                    cameraBean.setResolutionWidth(cameraInfo.getResolutionWidth());
+                                    cameraBean.setResolutionWidth(cameraInfo.getResolutionWidth
+                                            ());
                                     cameraBean.setResolutionHeight(cameraInfo.getResolutionHeight
                                             ());
                                     cameraBean.setErrorFlag(cameraInfo.getErrorFlag());

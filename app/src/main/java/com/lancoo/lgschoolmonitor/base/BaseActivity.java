@@ -20,6 +20,10 @@ import com.lancoo.lgschoolmonitor.R;
 import com.lancoo.lgschoolmonitor.utils.ToastUtil;
 import com.lancoo.lgschoolmonitor.view.ProDialog;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * @author Hinata-Liu
  * @date 2018/3/6 11:42.
@@ -28,6 +32,7 @@ import com.lancoo.lgschoolmonitor.view.ProDialog;
 public class BaseActivity extends AppCompatActivity {
     private LinearLayout rootLayout;
     protected Toolbar toolbar;
+
     // 测试使用tag
     protected int mActionBarHei;// actionbar高度
     private BaseActivity oContext;
@@ -228,5 +233,23 @@ public class BaseActivity extends AppCompatActivity {
     protected void dismissProcessDialog() {
         if (mProdialog != null && mProdialog.isShowing())
             mProdialog.dismiss();
+    }
+
+    protected String longToTimeStr(long time,String formatPattern) {
+        SimpleDateFormat sdf = new SimpleDateFormat(formatPattern, Locale.getDefault());
+        return sdf.format(new Date(time));
+    }
+    protected String longToTimeStr(long time) {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+//        return sdf.format(new Date(time));
+        return longToTimeStr(time,"yyyy-MM-dd HH:mm:ss");
+    }
+
+    protected String currentTimeToTimeStr(String formatPattern) {
+        return longToTimeStr(System.currentTimeMillis(),formatPattern);
+    }
+
+    protected String currentTimeToTimeStr() {
+        return longToTimeStr(System.currentTimeMillis(),"yyyy-MM-dd HH:mm:ss");
     }
 }

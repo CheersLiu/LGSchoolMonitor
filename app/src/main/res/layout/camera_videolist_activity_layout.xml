@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_F2F2F2">
+
+    <LinearLayout
+        android:id="@+id/headLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/login_operate_margin_left10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/dateText"
+            android:layout_width="85dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/date_bg_shape"
+            android:gravity="center"
+            android:paddingBottom="3dp"
+            android:paddingLeft="@dimen/login_operate_margin_left10dp"
+            android:paddingRight="@dimen/login_operate_margin_left10dp"
+            android:paddingTop="3dp"
+            android:textColor="@color/color_282828"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/color_0099FF"
+            android:layout_marginLeft="@dimen/login_operate_margin_left10dp"
+            android:layout_gravity="center_vertical"
+            android:text="选择时间"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/headLayout">
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="25dp"
+            android:background="@color/color_9BBFD2" />
+
+        <android.support.v7.widget.RecyclerView
+
+            android:id="@+id/cameraVideoRecView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/color_F2F2F2">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </FrameLayout>
+
+</RelativeLayout>
