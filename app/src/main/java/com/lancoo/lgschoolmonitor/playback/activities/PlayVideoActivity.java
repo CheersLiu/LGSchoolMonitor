@@ -22,6 +22,8 @@ import com.lancoo.lgschoolmonitor.utils.SysFileUtil;
 import com.lancoo.lgschoolmonitor.view.AutoBgImageView;
 import com.lidroid.xutils.DbUtils;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -57,6 +59,7 @@ public class PlayVideoActivity extends BaseActivity implements View.OnClickListe
     private DownloadObserver mObserver;
     private VideoDownloadObservable mObservable;
     private DbUtils mDbutil;
+    private ArrayList<VideoDownloadBean> mDownloadList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,7 @@ public class PlayVideoActivity extends BaseActivity implements View.OnClickListe
                 + CurrentUser.UserID + ".db");
         mObservable = VideoDownloadObservable.getObservable();
         mObservable.setContext(this, mDbutil);
+        mDownloadList = mObservable.getmDownList();
     }
 
     private void initActionBar() {
@@ -131,8 +135,57 @@ public class PlayVideoActivity extends BaseActivity implements View.OnClickListe
                 mPosition.setText(mDataCam.getCamName());
             }
         }
-        String hint = "下载 [" + SysFileUtil.FormetFileSize(mVideoBean.getFileSize()) + "]";
-        mHint.setText(hint);
+        try {
+            File f = new File(Constant.VIDEO_PATH + mVideoBean.getFileName());
+            if (f.exists()) {
+                if (f.length() == mVideoBean.getFileSize()) {
+                    mProgressBar.setProgress(100);
+                    mHint.setText("下载已完成");
+                } else {
+                    if (null != mDownloadList && mDownloadList.size() > 0) {
+                        VideoDownloadBean bean = null;
+                        for (int i = 0; i < mDownloadList.size(); i++) {
+                            if (mDownloadList.get(i).getHttpUrl().equals(mVideoBean.getHttpUrl())) {
+                                bean = mDownloadList.get(i);
+                                break;
+                            }
+                        }
+                        if (null != bean) {
+                            switch (bean.getDownloadType()) {
+                                case 1:
+                                    mProgressBar.setProgress((int) (bean.getCurrentFileSize() *
+                                            100 / bean.getFileSize()));
+                                    mHint.setText("已暂停");
+                                    break;
+                                case 2:
+                                    mObserver = new DownloadObserver();
+                                    mObservable.addObserver(mObserver);
+                                    mHint.setText("下载中...");
+                                    break;
+                                case 4:
+                                    mProgressBar.setProgress((int) (bean.getCurrentFileSize() *
+                                            100 / bean.getFileSize()));
+                                    mHint.setText("等待下载");
+                                    break;
+                                default:
+
+                                    break;
+                            }
+                        }
+                    }
+                    mProgressBar.setProgress(0);
+                    String hint = "下载 [" + SysFileUtil.FormetFileSize(mVideoBean.getFileSize()) +
+                            "]";
+                    mHint.setText(hint);
+                }
+            } else {
+                String hint = "下载 [" + SysFileUtil.FormetFileSize(mVideoBean.getFileSize()) + "]";
+                mHint.setText(hint);
+            }
+        } catch (Exception e) {
+            String hint = "下载 [" + SysFileUtil.FormetFileSize(mVideoBean.getFileSize()) + "]";
+            mHint.setText(hint);
+        }
         Glide.with(this).load(getVideoSnapshotPath(mVideoBean.getHttpUrl()))
                 .into(mVideoSnapshotIV);
         mPlayBtn.setOnClickListener(this);
@@ -217,7 +270,7 @@ public class PlayVideoActivity extends BaseActivity implements View.OnClickListe
             VideoDownloadBean bean = (VideoDownloadBean) data;
             int pro = (int) (bean.getCurrentFileSize() * 100 / bean.getFileSize());
             mProgressBar.setProgress(pro);
-            if(pro == 100){
+            if (pro == 100) {
                 mHint.setText("下载已完成");
             }
         }
